@@ -104,7 +104,7 @@ namespace E_Commerce_Client
 
         }
         TextBox textBox = new TextBox();
-        public string  SelectedCommand { get; set; }
+        public string SelectedCommand { get; set; }
 
         private void ButtonClickCommand(object sender, RoutedEventArgs e)
         {
@@ -115,12 +115,20 @@ namespace E_Commerce_Client
                 SelectedCommand=result;
 
                 var splitResult = result.Split('\\');
-                if (splitResult.Length>2)
+                if (splitResult.Length>2 || result.Contains('?'))
                 {
                     textBox.Width=800;
                     textBox.Height=60;
-                    textBox.Text="*"+splitResult[2];
                     textBox.FontSize=22;
+                    if (result.Contains('?'))
+                    {
+                        var subresult = result.Split(new[] { '?' }, 2);
+                        var keyvalues = subresult[1].Split(new[] { '&' }, 2);
+                        textBox.Text = "*" + $"{keyvalues[0].Split("=")[0]}&{keyvalues[1].Split("=")[0]}";
+
+                    }
+                    else
+                        textBox.Text = "*" + splitResult[2];
 
                     if (ParamsStackPanel.Children.Count>3)
                     {
@@ -157,9 +165,21 @@ namespace E_Commerce_Client
         {
             var result= SelectedCommand.Split("\\");
             var resultText = result[0]+"\\"+result[1]+"\\"+textBox.Text;
+
             if (SelectedCommand.Contains("json"))
             {
                 resultText=result[0]+"\\"+result[1]+" "+textBox.Text;
+            }
+            else if (SelectedCommand.Contains('?'))
+            {
+                var subresult = result[1].Split(new[] { '?' }, 2);
+                var methodname = subresult[0];
+                var keyvalues = subresult[1].Split(new[] { '&' }, 2);
+                var values = textBox.Text.Split(new[] { '&' }, 2);
+                if (values.Length == 2)
+                    resultText= result[0] + "\\" + methodname + "?" + $"{keyvalues[0].Split("=")[0]}=" + values[0] +"&"+ $"{keyvalues[1].Split("=")[0]}=" +values[1];
+                else if(values.Length == 1)
+                    resultText = result[0] + "\\" + methodname + "?"+ $"{keyvalues[0].Split("=")[0]}=" + values[0];
             }
             SendString(resultText);
         }

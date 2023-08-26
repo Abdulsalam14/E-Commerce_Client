@@ -14,7 +14,7 @@
                 <Button Click="Button_Click_1" FontSize="30" FontFamily="Comic Sans MS" Background="White" >Send Request</Button>
             </StackPanel>
             <ScrollViewer VerticalScrollBarVisibility="Visible" Height="160">
-                <StackPanel Name="CommandsStackpanel" Width="500"></StackPanel>
+                <StackPanel Name="CommandsStackpanel" Width="550"></StackPanel>
             </ScrollViewer>
             <StackPanel>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
